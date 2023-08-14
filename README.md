@@ -1,3 +1,8 @@
-# Northcoders News API
+# SETUP
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+Environment variable:
+
+- To access the database, first run npm setup-dbs to create the databases
+- Create two files, .env.development and .env.test
+- Write inside .env.development, PGDATABASE = nc_news
+- Write inside .env.test, PGDATABASE = nc_news_test
