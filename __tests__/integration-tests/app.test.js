@@ -25,4 +25,20 @@ describe("nc-news", ()=>{
             })
         })
     })
+
+    
+
+
+    describe("GET /api/articles/:article_id", ()=>{
+        test("200: Responds with status code", ()=>{
+            return request(app).get("/api/articles/1").expect(200);
+        })
+        test("200: Responds with article object", ()=>{
+            return request(app).get("/api/articles/1").expect(200).then(({body})=>{
+                const {article} = body;
+
+                
+            })
+        })
+    })
 })
