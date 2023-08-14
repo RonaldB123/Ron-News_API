@@ -30,12 +30,11 @@ describe("nc-news", ()=>{
         test("200: Responds with status code", ()=>{
             return request(app).get("/api").expect(200);
         })
-        test("200: Responds with a JSON object of all endpoints", ()=>{
+        test("200: Responds with an object of all endpoints", ()=>{
             return request(app).get("/api").expect(200).then(({body}) =>{
                 const {endpoints} = body;
-                const parsedEndpoints = JSON.parse(endpoints);
-
-                for(let [key, value] of Object.entries(parsedEndpoints)){
+                
+                for(let [key, value] of Object.entries(endpoints)){
 
                     expect(key.includes("api")).toBe(true);
                     expect(value).toHaveProperty("description", expect.any(String));

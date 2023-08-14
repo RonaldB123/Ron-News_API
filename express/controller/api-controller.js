@@ -1,5 +1,5 @@
-const {endpointData} = require("../model/api-model");
+const endpointJSON = require("../endpoints.json");
 
 exports.getEndpoints = (req, res) =>{
-    res.status(200).send({endpoints: JSON.stringify(endpointData())});
+    res.status(200).send({endpoints: endpointJSON});
 }
