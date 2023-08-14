@@ -9,10 +9,10 @@ afterAll(()=> db.end())
 
 describe("nc-news", ()=>{
     describe("GET /api/topics", ()=>{
-        test("200: Returns status code", ()=>{
+        test("200: Responds with status code", ()=>{
             return request(app).get("/api/topics").expect(200);
         })
-        test("200: Returns an array of topics objects", ()=>{
+        test("200: Responds with an array of topics objects", ()=>{
             return request(app).get("/api/topics").expect(200).then(({body})=>{
                 const {topics} = body;
                 
@@ -22,6 +22,29 @@ describe("nc-news", ()=>{
                     expect(topic).toHaveProperty('description', expect.any(String));
 
                 })
+            })
+        })
+    })
+
+    describe("GET /api", ()=>{
+        test("200: Responds with status code", ()=>{
+            return request(app).get("/api").expect(200);
+        })
+        test("200: Responds with an object of all endpoints", ()=>{
+            return request(app).get("/api").expect(200).then(({body}) =>{
+                const {endpoints} = body;
+                
+                for(let [key, value] of Object.entries(endpoints)){
+
+                    expect(key.includes("api")).toBe(true);
+                    expect(value).toHaveProperty("description", expect.any(String));
+                    expect(value).toHaveProperty("queries", expect.any(Array));
+                    expect(value).toHaveProperty("exampleResponse", expect.any(Object));
+                    
+                    if(key.includes("POST") || key.includes("PATCH") || key.includes("DELETE")){
+                        expect(value.toHaveProperty("exampleBody", expect.any(Object)))
+                    }
+                }
             })
         })
     })
