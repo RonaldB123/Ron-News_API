@@ -16,6 +16,7 @@ describe("nc-news", ()=>{
             return request(app).get("/api/topics").expect(200).then(({body})=>{
                 const {topics} = body;
                 
+                expect(topics.length === 3).toBe(true);
                 topics.forEach(topic =>{
                     expect(topic).toHaveProperty('slug', expect.any(String));
                     expect(topic).toHaveProperty('description', expect.any(String));
