@@ -14,6 +14,12 @@ app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticleById);
 
 app.use((err, req, res, next) =>{
+    if(err.status === 400 || err.status === 404){
+        res.status(err.status).send({message: err.message});
+    }
+})
+
+app.use((err, req, res, next) =>{
     res.status(500).send(err);
 })
 
