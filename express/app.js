@@ -14,8 +14,10 @@ app.get("/api", getEndpoints)
 app.get("/api/articles/:article_id", getArticleById);
 
 app.use((err, req, res, next) =>{
-    if(err.status === 400 || err.status === 404){
+    if(err.status === 404){
         res.status(err.status).send({message: err.message});
+    }else if(err.code === '22P02'){
+        res.status(400).send({message: "Bad Request"})
     }
 })
 
