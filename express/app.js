@@ -2,6 +2,8 @@ const express = require('express');
 
 const app = express();
 
+app.use(express.json())
+
 const {getTopics} = require("./controller/topics-controller");
 const {getEndpoints} = require("./controller/api-controller");
 const {getArticles} = require("./controller/getArticles-controller");
@@ -29,6 +31,7 @@ app.get("/api/articles", getArticles);
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 
 app.use((err, req, res, next) =>{
+    console.log(err)
     res.status(500).send({err});
 })
 

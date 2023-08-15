@@ -115,17 +115,29 @@ describe("nc-news", ()=>{
 
     describe("POST /api/articles/:article_id/comments", ()=>{
         test("200: Responds with status code", ()=>{
-            const body = {
-                hi: "hello"
+            const newComment = {
+                username: "ronaldb123",
+                body: "Hello this a test comment"
             }
-            return request(app).post("/api/articles/1/comments").send(body).expect(200);
+            return request(app).post("/api/articles/1/comments").send(newComment).expect(200);
         })  
         test("200: Responds with newly added comment", ()=>{
-            const body = {
-
+            const newComment = {
+                username: "ronaldb123",
+                body: "Hello this a test comment"
             }
-            return request(app).post("/api/articles/1/comments").send(body).then(({body})=>{
-                
+            return request(app).post("/api/articles/1/comments").send(newComment).then(({body})=>{
+                const {comment} = body;
+                const expected = {
+                    comment_id: expect.any(Number),
+                    article_id: expect.any(Number),
+                    author: expect.any(String),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    body: expect.any(String)
+                }
+                expect(comment).toHaveLength(1);
+                expect(comment[0]).toMatchObject(expected);
             })
         })
     })
