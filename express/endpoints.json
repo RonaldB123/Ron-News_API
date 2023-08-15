@@ -43,8 +43,6 @@
       "comment_count": 2
     }  },
 
-
-
   "GET /api/articles/:article_id/comments": {
     "description": "Takes id of article and returns all comments for that id",
     "queries": ["article_id"],

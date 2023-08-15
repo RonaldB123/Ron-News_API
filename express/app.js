@@ -27,9 +27,6 @@ app.use((err, req, res, next) =>{
 
 app.get("/api/articles", getArticles);
 
-
-
-
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
 
 app.use(handleCustomErrors);
