@@ -92,13 +92,12 @@ describe("nc-news", ()=>{
             return request(app).get("/api/articles").expect(200);
         })
         test("200: Responds with array of article objects", ()=>{
-            return request(app).get("/api/articles").expect(200).then(({body}) =>{
+            return request(app).get("/api/articles").then(({body}) =>{
                 const {articles} = body;
 
                 expect(articles).toBeSortedBy("created_at",{decending: false})
 
                 articles.forEach(article =>{
-                    console.log(article)
                     expect(article).toHaveProperty("author", expect.any(String));
                     expect(article).toHaveProperty("title", expect.any(String));
                     expect(article).toHaveProperty("article_id", expect.any(Number));
