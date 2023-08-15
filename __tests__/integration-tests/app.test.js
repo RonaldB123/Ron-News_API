@@ -85,7 +85,6 @@ describe("nc-news", ()=>{
             })
         })
     })
-})
 
     describe("GET /api/articles", ()=>{
         test("200: Responds with status code", ()=>{
@@ -95,21 +94,39 @@ describe("nc-news", ()=>{
             return request(app).get("/api/articles").then(({body}) =>{
                 const {articles} = body;
                 const expected = {
-                  article_id: expect.any(Number),
-                  title: expect.any(String),
-                  topic: expect.any(String),
-                  author: expect.any(String),
-                  created_at: expect.any(String),
-                  votes: expect.any(Number),
-                  article_img_url:  expect.any(String),
-                  comment_count: expect.any(Number)
+                article_id: expect.any(Number),
+                title: expect.any(String),
+                topic: expect.any(String),
+                author: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                article_img_url:  expect.any(String),
+                comment_count: expect.any(Number)
                 }
-
+    
                 expect(articles).toBeSortedBy("created_at",{descending: true});
-
+    
                 articles.forEach(article =>{
                     expect(article).toMatchObject(expected);
                 })
             })
         })
+    })
+
+    describe("POST /api/articles/:article_id/comments", ()=>{
+        test("200: Responds with status code", ()=>{
+            const body = {
+                hi: "hello"
+            }
+            return request(app).post("/api/articles/1/comments").send(body).expect(200);
+        })  
+        test("200: Responds with newly added comment", ()=>{
+            const body = {
+
+            }
+            return request(app).post("/api/articles/1/comments").send(body).then(({body})=>{
+                
+            })
+        })
+    })
 })

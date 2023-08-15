@@ -6,6 +6,7 @@ const {getTopics} = require("./controller/topics-controller");
 const {getEndpoints} = require("./controller/api-controller");
 const {getArticles} = require("./controller/getArticles-controller");
 const {getArticleById} = require("./controller/article-controller");
+const {postCommentByArticleId} = require("./controller/postComment-controller");
 
 app.get("/api/topics", getTopics);
 
@@ -22,6 +23,10 @@ app.use((err, req, res, next) =>{
 })
 
 app.get("/api/articles", getArticles);
+
+
+
+app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 
 app.use((err, req, res, next) =>{
     res.status(500).send({err});
