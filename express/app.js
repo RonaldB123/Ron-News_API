@@ -4,6 +4,7 @@ const app = express();
 
 const {getTopics} = require("./controller/topics-controller");
 const {getEndpoints} = require("./controller/api-controller");
+const {getArticles} = require("./controller/getArticles-controller");
 const {getArticleById} = require("./controller/article-controller");
 const {getCommentsByArticleId} = require("./controller/commentByArId-controller");
 
@@ -23,6 +24,8 @@ app.use((err, req, res, next) =>{
         res.status(400).send({message: "Bad Request"})
     }
 })
+
+app.get("/api/articles", getArticles);
 
 
 
