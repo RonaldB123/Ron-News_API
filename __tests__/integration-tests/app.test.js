@@ -94,19 +94,21 @@ describe("nc-news", ()=>{
         test("200: Responds with array of article objects", ()=>{
             return request(app).get("/api/articles").then(({body}) =>{
                 const {articles} = body;
+                const expected = {
+                  article_id: expect.any(Number),
+                  title: expect.any(String),
+                  topic: expect.any(String),
+                  author: expect.any(String),
+                  created_at: expect.any(String),
+                  votes: expect.any(Number),
+                  article_img_url:  expect.any(String),
+                  comment_count: expect.any(Number)
+                }
 
-                expect(articles).toBeSortedBy("created_at",{decending: false})
-                console.log(articles)
+                expect(articles).toBeSortedBy("created_at",{descending: true});
+
                 articles.forEach(article =>{
-                    expect(article).toHaveProperty("author", expect.any(String));
-                    expect(article).toHaveProperty("title", expect.any(String));
-                    expect(article).toHaveProperty("article_id", expect.any(Number));
-                    expect(article).toHaveProperty("topic", expect.any(String));
-                    expect(article).toHaveProperty("created_at", expect.any(String));
-                    expect(article).toHaveProperty("votes", expect.any(Number));
-                    expect(article).toHaveProperty("article_img_url", expect.any(String)); 
-                    expect(article).toHaveProperty("comment_count", expect.any(Number)); 
-                    expect(article).not.toHaveProperty("body"); 
+                    expect(article).toMatchObject(expected);
                 })
             })
         })
