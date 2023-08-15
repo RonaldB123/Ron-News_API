@@ -96,7 +96,7 @@ describe("nc-news", ()=>{
                 const {articles} = body;
 
                 expect(articles).toBeSortedBy("created_at",{decending: false})
-
+                console.log(articles)
                 articles.forEach(article =>{
                     expect(article).toHaveProperty("author", expect.any(String));
                     expect(article).toHaveProperty("title", expect.any(String));
