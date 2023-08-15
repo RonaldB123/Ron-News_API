@@ -7,6 +7,9 @@ const {getEndpoints} = require("./controller/api-controller");
 const {getArticleById} = require("./controller/article-controller");
 const {getCommentsByArticleId} = require("./controller/commentByArId-controller");
 
+const {handleCustomErrors} = require("./errHandlers/handleCustomErrors");
+const {handleSqlErrors} = require('./errHandlers/handleSqlErrors');
+
 app.get("/api/topics", getTopics);
 
 app.get("/api", getEndpoints)
@@ -26,15 +29,11 @@ app.use((err, req, res, next) =>{
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
 
-app.use((err, req, res, next) =>{
-    if(err.code === "22P02"){
-        res.status(400).send({message: "Bad Request"});
-    }else if(err.status === 404){
-        res.status(404).send({message: "Not Found"})
-    }
-})
+app.use(handleCustomErrors);
+app.use(handleSqlErrors);
 
 app.use((err, req, res, next) =>{
+    console.log(err)
     res.status(500).send({err});
 })
 

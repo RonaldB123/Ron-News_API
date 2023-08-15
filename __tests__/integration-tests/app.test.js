@@ -101,7 +101,8 @@ describe("nc-news", ()=>{
                 const {comments} = body;
              
                 expect(comments).toBeSortedBy("created_at", {descending: true});
-                
+                expect(comments).toHaveLength(11);
+
                 comments.forEach(comment =>{
                     expect(comment).toHaveProperty("comment_id", expect.any(Number));
                     expect(comment).toHaveProperty("votes", expect.any(Number));
@@ -126,6 +127,12 @@ describe("nc-news", ()=>{
         })
         test("200: Responds with empty array when given valid article_id with no article", ()=>{
             return request(app).get("/api/articles/4/comments").expect(200).then(({body}) =>{
+                const {comments} = body;
+                expect(comments).toEqual([]);
+            })
+        })
+        test("200: Responds with empty array when given valid article_id with no comments", ()=>{
+            return request(app).get("/api/articles/7/comments").expect(200).then(({body}) =>{
                 const {comments} = body;
                 expect(comments).toEqual([]);
             })
