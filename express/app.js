@@ -6,6 +6,10 @@ const {getTopics} = require("./controller/topics-controller");
 const {getEndpoints} = require("./controller/api-controller");
 const {getArticles} = require("./controller/getArticles-controller");
 const {getArticleById} = require("./controller/article-controller");
+const {getCommentsByArticleId} = require("./controller/commentByArId-controller");
+
+const {handleCustomErrors} = require("./errHandlers/handleCustomErrors");
+const {handleSqlErrors} = require('./errHandlers/handleSqlErrors');
 
 app.get("/api/topics", getTopics);
 
@@ -23,7 +27,13 @@ app.use((err, req, res, next) =>{
 
 app.get("/api/articles", getArticles);
 
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
+
+app.use(handleCustomErrors);
+app.use(handleSqlErrors);
+
 app.use((err, req, res, next) =>{
+    console.log(err)
     res.status(500).send({err});
 })
 
