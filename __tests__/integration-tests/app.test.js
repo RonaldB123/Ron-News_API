@@ -160,6 +160,34 @@ describe("nc-news", ()=>{
             })
         })
     })
+
+
+
+
+
+
+
+
+
+    describe("DELETE /api/comments/:comment_id", ()=>{
+        test("", ()=>{
+
+        })
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 })
 
 
