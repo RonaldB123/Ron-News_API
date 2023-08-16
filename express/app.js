@@ -37,6 +37,9 @@ app.use(handleSqlErrors);
 
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 
+app.use(handleCustomErrors);
+app.use(handleSqlErrors);
+
 app.use((err, req, res, next) =>{
     console.log(err)
     res.status(500).send({err});

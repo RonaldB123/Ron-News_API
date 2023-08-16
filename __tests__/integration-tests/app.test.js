@@ -42,7 +42,7 @@ describe("nc-news", ()=>{
                     expect(value).toHaveProperty("exampleResponse", expect.any(Object));
                     
                     if(key.includes("POST") || key.includes("PATCH") || key.includes("DELETE")){
-                        expect(value.toHaveProperty("exampleBody", expect.any(Object)))
+                        expect(value).toHaveProperty("exampleBody", expect.any(Object))
                     }
                 }
             })
@@ -161,30 +161,47 @@ describe("nc-news", ()=>{
     })
     
     describe("POST /api/articles/:article_id/comments", ()=>{
-        test("200: Responds with status code", ()=>{
+        test("201: Responds with newly added comment", ()=>{
             const newComment = {
                 username: "ronaldb123",
-                body: "Hello this a test comment"
+                body: "test comment"
             }
-            return request(app).post("/api/articles/1/comments").send(newComment).expect(200);
-        })  
-        test("200: Responds with newly added comment", ()=>{
-            const newComment = {
-                username: "ronaldb123",
-                body: "Hello this a test comment"
-            }
-            return request(app).post("/api/articles/1/comments").send(newComment).then(({body})=>{
+            return request(app).post("/api/articles/1/comments").send(newComment).expect(201).then(({body})=>{
                 const {comment} = body;
                 const expected = {
                     comment_id: expect.any(Number),
-                    article_id: expect.any(Number),
-                    author: expect.any(String),
+                    article_id: 1,
+                    author: "ronaldb123",
                     votes: expect.any(Number),
                     created_at: expect.any(String),
-                    body: expect.any(String)
+                    body: "test comment"
                 }
+                
                 expect(comment).toHaveLength(1);
                 expect(comment[0]).toMatchObject(expected);
+            })
+        })
+        test("400: Responds with bad requests for invalid article_id", ()=>{
+            const newComment = {
+                username: "ronaldb123",
+                body: "test comment"
+            }
+            return request(app).post("/api/articles/hello/comments").send(newComment).expect(400).then(({body}) =>{
+                const {message} = body;
+
+                expect(message).toEqual("Bad Request");
+            })
+        })
+        test("404: Responds with not found for invalid body", ()=>{
+            const newComment = {
+                username: "",
+                body: "",
+                name: ""
+            }
+            return request(app).post("/api/articles/1/comments").send(newComment).expect(404).then(({body}) =>{
+                const {message} = body;
+
+                expect(message).toEqual("Not Found");
             })
         })
     })
