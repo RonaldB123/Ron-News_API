@@ -169,9 +169,21 @@ describe("nc-news", ()=>{
 
 
 
-    describe("DELETE /api/comments/:comment_id", ()=>{
-        test("", ()=>{
-
+    describe.only("DELETE /api/comments/:comment_id", ()=>{
+        test("204: Responds with status code", ()=>{
+            return request(app).delete("/api/comments/2").expect(204);
+        })
+        test("400: Responds with bad request for invalid id", ()=>{
+            return request(app).delete("/api/comments/hello").expect(400).then(({body})=>{
+                const {message} = body;
+                expect(message).toEqual("Bad Request");
+            })
+        })
+        test("404: Responds with not found if comment_id does not exist", ()=>{
+            return request(app).delete("/api/comments/999").expect(404).then(({body}) =>{
+                const {message} = body;
+                expect(message).toEqual("Not Found");
+            })
         })
     })
 
