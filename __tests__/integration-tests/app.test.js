@@ -160,6 +160,34 @@ describe("nc-news", ()=>{
             })
         })
     })
+
+
+
+
+
+
+
+
+
+
+
+
+    describe("GET /api/users", ()=>{
+        test("200: Responds with an array of user objects", ()=>{
+            return request(app).get("/api/users").expect(200).then(({body}) =>{
+                const {users} = body;
+                const expected = {
+                    username: expect.any(String),
+                    name: expect.any(String),
+                    avatar_url: expect.any(String)
+                }
+                expect(users).toHaveLength(4);
+                users.forEach(user =>{
+                    expect(user).toMatchObject(expected)
+                })
+            })
+        })
+    })
 })
 
 

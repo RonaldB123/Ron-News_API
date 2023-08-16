@@ -7,6 +7,7 @@ const {getEndpoints} = require("./controller/api-controller");
 const {getArticles} = require("./controller/getArticles-controller");
 const {getArticleById} = require("./controller/article-controller");
 const {getCommentsByArticleId} = require("./controller/commentByArId-controller");
+const {getUsers} = require("./controller/users-controller");
 
 const {handleCustomErrors} = require("./errHandlers/handleCustomErrors");
 const {handleSqlErrors} = require('./errHandlers/handleSqlErrors');
@@ -16,6 +17,8 @@ app.get("/api/topics", getTopics);
 app.get("/api", getEndpoints)
 
 app.get("/api/articles/:article_id", getArticleById);
+
+app.get("/api/users", getUsers);
 
 app.use((err, req, res, next) =>{
     if(err.status === 404){
