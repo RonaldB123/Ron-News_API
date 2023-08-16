@@ -105,7 +105,8 @@ describe("nc-news", ()=>{
                 }
     
                 expect(articles).toBeSortedBy("created_at",{descending: true});
-    
+                expect(articles).toHaveLength(13);
+
                 articles.forEach(article =>{
                     expect(article).toMatchObject(expected);
                 })
@@ -177,8 +178,7 @@ describe("nc-news", ()=>{
                     body: "test comment"
                 }
                 
-                expect(comment).toHaveLength(1);
-                expect(comment[0]).toMatchObject(expected);
+                expect(comment).toMatchObject(expected);
             })
         })
         test("400: Responds with bad requests for invalid article_id", ()=>{
