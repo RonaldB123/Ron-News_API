@@ -164,7 +164,7 @@ describe("nc-news", ()=>{
     describe("POST /api/articles/:article_id/comments", ()=>{
         test("201: Responds with newly added comment", ()=>{
             const newComment = {
-                username: "ronaldb123",
+                username: "icellusedkars",
                 body: "test comment"
             }
             return request(app).post("/api/articles/1/comments").send(newComment).expect(201).then(({body})=>{
@@ -172,7 +172,7 @@ describe("nc-news", ()=>{
                 const expected = {
                     comment_id: expect.any(Number),
                     article_id: 1,
-                    author: "ronaldb123",
+                    author: "icellusedkars",
                     votes: expect.any(Number),
                     created_at: expect.any(String),
                     body: "test comment"
@@ -183,7 +183,7 @@ describe("nc-news", ()=>{
         })
         test("400: Responds with bad requests for invalid article_id", ()=>{
             const newComment = {
-                username: "ronaldb123",
+                username: "icellusedkars",
                 body: "test comment"
             }
             return request(app).post("/api/articles/hello/comments").send(newComment).expect(400).then(({body}) =>{
