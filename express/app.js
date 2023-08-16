@@ -2,6 +2,8 @@ const express = require('express');
 
 const app = express();
 
+app.use(express.json());
+
 const {getTopics} = require("./controller/topics-controller");
 const {getEndpoints} = require("./controller/api-controller");
 const {getArticles} = require("./controller/getArticles-controller");
@@ -34,6 +36,9 @@ app.use(handleCustomErrors);
 app.use(handleSqlErrors);
 
 app.patch("/api/articles/:article_id", patchArticle);
+
+app.use(handleCustomErrors);
+app.use(handleSqlErrors)
 
 app.use((err, req, res, next) =>{
     console.log(err)
