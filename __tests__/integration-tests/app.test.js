@@ -42,7 +42,7 @@ describe("nc-news", ()=>{
                     expect(value).toHaveProperty("exampleResponse", expect.any(Object));
                     
                     if(key.includes("POST") || key.includes("PATCH") || key.includes("DELETE")){
-                        expect(value.toHaveProperty("exampleBody", expect.any(Object)))
+                        expect(value).toHaveProperty("exampleBody", expect.any(Object))
                     }
                 }
             })
