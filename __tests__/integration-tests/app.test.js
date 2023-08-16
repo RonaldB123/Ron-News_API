@@ -169,7 +169,7 @@ describe("nc-news", ()=>{
 
 
 
-    describe.only("DELETE /api/comments/:comment_id", ()=>{
+    describe("DELETE /api/comments/:comment_id", ()=>{
         test("204: Responds with status code", ()=>{
             return request(app).delete("/api/comments/2").expect(204);
         })
