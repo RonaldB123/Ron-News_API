@@ -42,7 +42,6 @@
       "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
       "comment_count": 2
     }  },
-
   "GET /api/articles/:article_id/comments": {
     "description": "Takes id of article and returns all comments for that id",
     "queries": ["article_id"],
@@ -55,12 +54,6 @@
       "created_at": "2020-11-03T21:00:00.000Z"
     }
   },
-
-
-
-
-
-
   "DELETE /api/comments/:comment_id": {
     "description": "Takes id of comment and deletes the comment with that id",
     "queries": ["comment_id"],
@@ -96,6 +89,15 @@
       "created_at": "2020-11-03T09:12:00.000Z",
       "votes": 10,
       "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+    }
+  },
+  "GET /api/users": {
+    "description": "Responds with all users",
+    "queries": [],
+    "exampleResponse": {
+      "username": "butter_bridge",
+      "name": "jonny",
+      "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
     }
   }
 }
