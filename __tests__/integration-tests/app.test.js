@@ -251,7 +251,7 @@ describe("nc-news", ()=>{
             const newVote = {inc_votes: "hello"};
             return request(app).patch("/api/articles/1").send(newVote).expect(400).then(({body}) =>{
                 const {message} = body;
-
+                
                 expect(message).toEqual("Bad Request")
             })
         })

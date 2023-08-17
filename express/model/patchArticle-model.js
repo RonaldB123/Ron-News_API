@@ -2,12 +2,16 @@ const db = require("../../db/connection");
 const format = require("pg-format");
 
 exports.patchArticleById = (articleId, bodyVotes) =>{
-    if(!bodyVotes.hasOwnProperty("inc_votes") || Object.keys(bodyVotes).length !== 1 || isNaN(bodyVotes.inc_votes)){
-        return Promise.reject({
-            status: 400,
-            message: "Bad Request"
-        })
-    }
+    const allowedKeys = ["inc_votes"]
+
+    Object.keys(bodyVotes).forEach(key =>{
+        if(!allowedKeys.includes(key)){
+            return Promise.reject({
+                status: 400,
+                message: "Bad Request"
+            })
+        }
+    })
 
     return db.query("SELECT * FROM articles WHERE article_id = $1", [articleId]).then(({rows})=>{
         return rows;
