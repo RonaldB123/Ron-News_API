@@ -9,8 +9,8 @@ exports.addComment = (article_id, body) =>{
                 message: "Not Found"
             })
     }
-        const commentsQuery = format(`INSERT INTO comments (body, article_id, author, votes, created_at)
-        VALUES %L RETURNING *`, [[body.body, Number(article_id), body.username, 0, new Date()]]);
+        const commentsQuery = format(`INSERT INTO comments (body, article_id, author, votes)
+        VALUES %L RETURNING *`, [[body.body, Number(article_id), body.username, 0]]);
         return db.query(commentsQuery).then(({rows})=>{
             return rows[0];
         })
