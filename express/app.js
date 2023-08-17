@@ -10,7 +10,7 @@ const {getArticles} = require("./controller/getArticles-controller");
 const {getArticleById} = require("./controller/article-controller");
 const {getCommentsByArticleId} = require("./controller/commentByArId-controller");
 const {postCommentByArticleId} = require("./controller/postComment-controller");
-const {getUsers} = require("./controller/users-controller");
+const {getAllUsers} = require("./controller/users-controller");
 
 const {handleCustomErrors} = require("./errHandlers/handleCustomErrors");
 const {handleSqlErrors} = require('./errHandlers/handleSqlErrors');
@@ -21,7 +21,6 @@ app.get("/api", getEndpoints)
 
 app.get("/api/articles/:article_id", getArticleById);
 
-app.get("/api/users", getUsers);
 
 app.use((err, req, res, next) =>{
     if(err.status === 404){
@@ -42,6 +41,8 @@ app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 
 app.use(handleCustomErrors);
 app.use(handleSqlErrors);
+
+app.get("/api/users", getAllUsers);
 
 app.use((err, req, res, next) =>{
     console.log(err)
