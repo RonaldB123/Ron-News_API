@@ -205,4 +205,63 @@ describe("nc-news", ()=>{
             })
         })
     })
+
+    describe("PATCH /api/articles/:article_id", ()=>{
+        test("200: Responds with updated article when given positive inc_votes", ()=>{
+            const newVote = {inc_votes: 10};
+            return request(app).patch("/api/articles/3").send(newVote).expect(200).then(({body}) =>{
+                const {article} = body;
+                const expected = {
+                    author: 'icellusedkars',
+                    title: 'Eight pug gifs that remind me of mitch',
+                    article_id: 3,
+                    topic: 'mitch',
+                    created_at: '2020-11-03T09:12:00.000Z',
+                    votes: 10,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                }
+                expect(article).toMatchObject(expected);
+            })
+        })
+        test("200: Responds with updated article when given negative inc_votes", ()=>{
+            const newVote = {inc_votes: -10};
+            return request(app).patch("/api/articles/3").send(newVote).expect(200).then(({body}) =>{
+                const {article} = body;
+                const expected = {
+                    author: 'icellusedkars',
+                    title: 'Eight pug gifs that remind me of mitch',
+                    article_id: 3,
+                    topic: 'mitch',
+                    created_at: '2020-11-03T09:12:00.000Z',
+                    votes: -10,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                }
+                expect(article).toMatchObject(expected);
+            })
+        })
+        test("400: Responds with 400 when given invalid article_id", ()=>{
+            const newVote = {inc_votes: 10};
+            return request(app).patch("/api/articles/hello").send(newVote).expect(400).then(({body}) =>{
+                const {message} = body;
+                
+                expect(message).toEqual("Bad Request");
+            })
+        })
+        test("400: Responds with 400 when given invalid body", ()=>{
+            const newVote = {inc_votes: "hello"};
+            return request(app).patch("/api/articles/1").send(newVote).expect(400).then(({body}) =>{
+                const {message} = body;
+                
+                expect(message).toEqual("Bad Request")
+            })
+        })
+        test("404: Responds with 404 when given valid but not existing article_id", ()=>{
+            const newVote = {inc_votes: 10};
+            return request(app).patch("/api/articles/9999").send(newVote).expect(404).then(({body})=>{
+                const {message} = body;
+
+                expect(message).toEqual("Not Found");
+            })
+        })
+    })
 })

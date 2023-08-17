@@ -10,6 +10,7 @@ const {getArticles} = require("./controller/getArticles-controller");
 const {getArticleById} = require("./controller/article-controller");
 const {getCommentsByArticleId} = require("./controller/commentByArId-controller");
 const {postCommentByArticleId} = require("./controller/postComment-controller");
+const {patchArticle} = require('./controller/patchArticle-controller');
 
 const {handleCustomErrors} = require("./errHandlers/handleCustomErrors");
 const {handleSqlErrors} = require('./errHandlers/handleSqlErrors');
@@ -39,6 +40,16 @@ app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 
 app.use(handleCustomErrors);
 app.use(handleSqlErrors);
+
+app.post("/api/articles/:article_id/comments", postCommentByArticleId);
+
+app.use(handleCustomErrors);
+app.use(handleSqlErrors);
+
+app.patch("/api/articles/:article_id", patchArticle);
+
+app.use(handleCustomErrors);
+app.use(handleSqlErrors)
 
 app.use((err, req, res, next) =>{
     console.log(err)
