@@ -160,8 +160,32 @@ describe("nc-news", ()=>{
             })
         })
     })
+
+    // describe("GET /api/articles?query", ()=>{
+    //     describe("/api/articles?topic=author")
+    //     test("200: Responds with articles in order of author query", ()=>{
+    //         return request(app).get("/api/articles?topic=author").expect(200).then(({body})=>{
+    //             const {articles} = body;
+
+
+
+    //             expect(articles).toBeSortedBy("author", {descending: true});
+
+    //         })
+    //     })
+    // })
 })
 
+// {
+//     author: 'icellusedkars',
+//     title: 'Does Mitch predate civilisation?',
+//     article_id: 8,
+//     topic: 'mitch',
+//     created_at: '2020-04-17T01:08:00.000Z',
+//     votes: 0,
+//     article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+//     comment_count: 0
+//   },
 
 
 
