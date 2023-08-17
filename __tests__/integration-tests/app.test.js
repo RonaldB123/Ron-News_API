@@ -247,12 +247,12 @@ describe("nc-news", ()=>{
                 expect(message).toEqual("Bad Request");
             })
         })
-        test("404: Responds with 404 when given invalid body", ()=>{
+        test("400: Responds with 400 when given invalid body", ()=>{
             const newVote = {inc_votes: "hello"};
-            return request(app).patch("/api/articles/1").send(newVote).expect(404).then(({body}) =>{
+            return request(app).patch("/api/articles/1").send(newVote).expect(400).then(({body}) =>{
                 const {message} = body;
 
-                expect(message).toEqual("Not Found")
+                expect(message).toEqual("Bad Request")
             })
         })
         test("404: Responds with 404 when given valid but not existing article_id", ()=>{
