@@ -42,7 +42,7 @@ describe("nc-news", ()=>{
                     expect(value).toHaveProperty("exampleResponse", expect.any(Object));
                     
                     if(key.includes("POST") || key.includes("PATCH") || key.includes("DELETE")){
-                        expect(value.toHaveProperty("exampleBody", expect.any(Object)))
+                        expect(value).toHaveProperty("exampleBody", expect.any(Object))
                     }
                 }
             })
@@ -86,7 +86,6 @@ describe("nc-news", ()=>{
         })
     })
 
-
     describe("GET /api/articles", ()=>{
         test("200: Responds with status code", ()=>{
             return request(app).get("/api/articles").expect(200);
@@ -95,24 +94,25 @@ describe("nc-news", ()=>{
             return request(app).get("/api/articles").then(({body}) =>{
                 const {articles} = body;
                 const expected = {
-                  article_id: expect.any(Number),
-                  title: expect.any(String),
-                  topic: expect.any(String),
-                  author: expect.any(String),
-                  created_at: expect.any(String),
-                  votes: expect.any(Number),
-                  article_img_url:  expect.any(String),
-                  comment_count: expect.any(Number)
+                article_id: expect.any(Number),
+                title: expect.any(String),
+                topic: expect.any(String),
+                author: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                article_img_url:  expect.any(String),
+                comment_count: expect.any(Number)
                 }
-
+    
                 expect(articles).toBeSortedBy("created_at",{descending: true});
+                expect(articles).toHaveLength(13);
 
                 articles.forEach(article =>{
                     expect(article).toMatchObject(expected);
                 })
             })
-        })
-})
+        })    
+    })
 
     describe("GET /api/articles/:article_id/comments", ()=>{
         test("200: Responds with status code", ()=>{
@@ -160,10 +160,49 @@ describe("nc-news", ()=>{
             })
         })
     })
+    
+    describe("POST /api/articles/:article_id/comments", ()=>{
+        test("201: Responds with newly added comment", ()=>{
+            const newComment = {
+                username: "icellusedkars",
+                body: "test comment"
+            }
+            return request(app).post("/api/articles/1/comments").send(newComment).expect(201).then(({body})=>{
+                const {comment} = body;
+                const expected = {
+                    comment_id: expect.any(Number),
+                    article_id: 1,
+                    author: "icellusedkars",
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    body: "test comment"
+                }
+                
+                expect(comment).toMatchObject(expected);
+            })
+        })
+        test("400: Responds with bad requests for invalid article_id", ()=>{
+            const newComment = {
+                username: "icellusedkars",
+                body: "test comment"
+            }
+            return request(app).post("/api/articles/hello/comments").send(newComment).expect(400).then(({body}) =>{
+                const {message} = body;
+
+                expect(message).toEqual("Bad Request");
+            })
+        })
+        test("404: Responds with not found for invalid body", ()=>{
+            const newComment = {
+                username: "",
+                body: "",
+                name: ""
+            }
+            return request(app).post("/api/articles/1/comments").send(newComment).expect(404).then(({body}) =>{
+                const {message} = body;
+
+                expect(message).toEqual("Not Found");
+            })
+        })
+    })
 })
-
-
-
-
-
-
