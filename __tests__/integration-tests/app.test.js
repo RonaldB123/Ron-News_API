@@ -207,9 +207,9 @@ describe("nc-news", ()=>{
     })
 
     describe("PATCH /api/articles/:article_id", ()=>{
-        test("201: Responds with updated article when given positive inc_votes", ()=>{
+        test("200: Responds with updated article when given positive inc_votes", ()=>{
             const newVote = {inc_votes: 10};
-            return request(app).patch("/api/articles/3").send(newVote).expect(201).then(({body}) =>{
+            return request(app).patch("/api/articles/3").send(newVote).expect(200).then(({body}) =>{
                 const {article} = body;
                 const expected = {
                     author: 'icellusedkars',
@@ -223,9 +223,9 @@ describe("nc-news", ()=>{
                 expect(article).toMatchObject(expected);
             })
         })
-        test("201: Responds with updated article when given negative inc_votes", ()=>{
+        test("200: Responds with updated article when given negative inc_votes", ()=>{
             const newVote = {inc_votes: -10};
-            return request(app).patch("/api/articles/3").send(newVote).expect(201).then(({body}) =>{
+            return request(app).patch("/api/articles/3").send(newVote).expect(200).then(({body}) =>{
                 const {article} = body;
                 const expected = {
                     author: 'icellusedkars',
@@ -253,6 +253,14 @@ describe("nc-news", ()=>{
                 const {message} = body;
 
                 expect(message).toEqual("Not Found")
+            })
+        })
+        test("404: Responds with 404 when given valid but not existing article_id", ()=>{
+            const newVote = {inc_votes: 10};
+            return request(app).patch("/api/articles/9999").send(newVote).expect(404).then(({body})=>{
+                const {message} = body;
+
+                expect(message).toEqual("Not Found");
             })
         })
     })

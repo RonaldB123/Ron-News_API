@@ -12,11 +12,13 @@ exports.patchArticleById = (articleId, bodyVotes) =>{
     return db.query("SELECT * FROM articles WHERE article_id = $1", [articleId]).then(({rows})=>{
         return rows;
     }).then((article)=>{
-        const newArticle = article[0]; 
-
-        const {article_id, title, topic, author, body, created_at, votes, article_img_url} = newArticle
+        const newArticle = article[0];
+        const {votes} = newArticle;
         const newVotes = votes + bodyVotes.inc_votes;
         
-        return {article_id, title, topic, author, body, created_at, votes: newVotes, article_img_url};
+        return db.query(`UPDATE articles SET votes = $1 WHERE article_id = $2 RETURNING *`, [newVotes, articleId]);
+    }).then(({rows})=>{
+        return rows[0];
     })
+    
 }
