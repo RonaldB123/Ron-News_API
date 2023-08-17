@@ -161,19 +161,29 @@ describe("nc-news", ()=>{
         })
     })
 
-    // describe("GET /api/articles?query", ()=>{
-    //     describe("/api/articles?topic=author")
-    //     test("200: Responds with articles in order of author query", ()=>{
-    //         return request(app).get("/api/articles?topic=author").expect(200).then(({body})=>{
-    //             const {articles} = body;
-
-
-
-    //             expect(articles).toBeSortedBy("author", {descending: true});
-
-    //         })
-    //     })
-    // })
+    describe("GET /api/articles?query", ()=>{
+        describe("/api/articles?topic=mitch", ()=>{
+            test("200: Responds with articles with specified topic", ()=>{
+                return request(app).get("/api/articles?topic=mitch").expect(200).then(({body})=>{
+                    const {articles} = body;
+                    expected = {
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: 'mitch',
+                        author: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        article_img_url:  expect.any(String),
+                        comment_count: expect.any(Number)
+                    }
+    
+                    articles.forEach(article =>{
+                        expect(article).toMatchObject(expected);
+                    })
+                })
+            })
+        })
+    })
 })
 
 // {
