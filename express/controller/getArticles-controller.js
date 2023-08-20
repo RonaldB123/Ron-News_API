@@ -1,9 +1,10 @@
 const {articleData} = require("../model/getArticles-model");
 
+exports.getArticles = (req, res, next) =>{
 
-exports.getArticles = (req, res) =>{
-    const {topic} = req.query;
-    articleData().then((articles) =>{
+    articleData(req.query).then((articles) =>{
         res.status(200).send({articles});
+    }).catch((err)=>{
+        next(err);
     })
 }
