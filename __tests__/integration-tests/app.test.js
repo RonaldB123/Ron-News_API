@@ -294,7 +294,7 @@ describe("nc-news", ()=>{
                 })
             })
             test("200: Responds with an array of article objects in order of ASC value", ()=>{
-                return request(app).get("/api/articles?order=DESC").expect(200).then(({body})=>{
+                return request(app).get("/api/articles?order=ASC").expect(200).then(({body})=>{
                     const {articles} = body;
 
                     expected = {
@@ -308,7 +308,7 @@ describe("nc-news", ()=>{
                         comment_count: expect.any(Number)
                     }
 
-                    expect(articles).toBeSortedBy("created_at", {descending: true});
+                    expect(articles).toBeSortedBy("created_at", {descending: false});
 
                     articles.forEach(article =>{
                         expect(article).toMatchObject(expected);
