@@ -300,4 +300,49 @@ describe("nc-news", ()=>{
             })
         })
     })
+
+
+
+
+
+    describe("GET /api/articles/:article_id (comment_count)", ()=>{
+        test("200: Responds with an article object with comment_count as collumn", ()=>{
+            return request(app).get("/api/articles/1").expect(200).then(({body})=>{
+                const {article} = body;
+
+                const expected =   {
+                    article_id: 1,
+                    title: 'Living in the shadow of a great man',
+                    topic: 'mitch',
+                    author: 'butter_bridge',
+                    body: 'I find this existence challenging',
+                    created_at: '2020-07-09T20:11:00.000Z',
+                    votes: 100,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                    comment_count: expect.any(Number)
+                };
+
+                expect(article).toMatchObject(expected);
+            })
+        })
+        test("200: Responds with a different article object with comment_count as collumn", ()=>{
+            return request(app).get("/api/articles/3").expect(200).then(({body})=>{
+                const {article} = body;
+
+                const expected =   {
+                    author: 'icellusedkars',
+                    body: 'some gifs',
+                    title: 'Eight pug gifs that remind me of mitch',
+                    article_id: 3,
+                    topic: 'mitch',
+                    created_at: '2020-11-03T09:12:00.000Z',
+                    votes: 0,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                    comment_count: expect.any(Number)
+                  }
+
+                expect(article).toMatchObject(expected);
+            })
+        })
+    })
 })
