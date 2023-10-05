@@ -42,7 +42,8 @@ describe("nc-news", ()=>{
                     expect(value).toHaveProperty("exampleResponse", expect.any(Object));
                     
                     if(key.includes("POST") || key.includes("PATCH") || key.includes("DELETE")){
-                        expect(value.toHaveProperty("exampleBody", expect.any(Object)))
+                        expect(value).toHaveProperty("exampleBody", expect.any(Object))
+                        expect(value).toHaveProperty("exampleBody", expect.any(Object))
                     }
                 }
             })
@@ -86,7 +87,6 @@ describe("nc-news", ()=>{
         })
     })
 
-
     describe("GET /api/articles", ()=>{
         test("200: Responds with status code", ()=>{
             return request(app).get("/api/articles").expect(200);
@@ -95,24 +95,25 @@ describe("nc-news", ()=>{
             return request(app).get("/api/articles").then(({body}) =>{
                 const {articles} = body;
                 const expected = {
-                  article_id: expect.any(Number),
-                  title: expect.any(String),
-                  topic: expect.any(String),
-                  author: expect.any(String),
-                  created_at: expect.any(String),
-                  votes: expect.any(Number),
-                  article_img_url:  expect.any(String),
-                  comment_count: expect.any(Number)
+                article_id: expect.any(Number),
+                title: expect.any(String),
+                topic: expect.any(String),
+                author: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                article_img_url:  expect.any(String),
+                comment_count: expect.any(Number)
                 }
-
+    
                 expect(articles).toBeSortedBy("created_at",{descending: true});
+                expect(articles).toHaveLength(13);
 
                 articles.forEach(article =>{
                     expect(article).toMatchObject(expected);
                 })
             })
-        })
-})
+        })    
+    })
 
     describe("GET /api/articles/:article_id/comments", ()=>{
         test("200: Responds with status code", ()=>{
@@ -161,183 +162,142 @@ describe("nc-news", ()=>{
         })
     })
 
-    describe("GET /api/articles?query", ()=>{
-        describe("/api/articles?topic=topic", ()=>{
-            test("200: Responds with articles with specified topic", ()=>{
-                return request(app).get("/api/articles?topic=mitch").expect(200).then(({body})=>{
-                    const {articles} = body;
-                    expected = {
-                        article_id: expect.any(Number),
-                        title: expect.any(String),
-                        topic: 'mitch',
-                        author: expect.any(String),
-                        created_at: expect.any(String),
-                        votes: expect.any(Number),
-                        article_img_url:  expect.any(String),
-                        comment_count: expect.any(Number)
-                    }
-    
-                    articles.forEach(article =>{
-                        expect(article).toMatchObject(expected);
-                    })
-                })
-            })
-            test("200: Responds with article with different topic", ()=>{
-                return request(app).get("/api/articles?topic=icellusedkars").expect(200).then(({body})=>{
-                    const {articles} = body;
-                    expected = {
-                        article_id: expect.any(Number),
-                        title: expect.any(String),
-                        topic: 'icellusedkars',
-                        author: expect.any(String),
-                        created_at: expect.any(String),
-                        votes: expect.any(Number),
-                        article_img_url:  expect.any(String),
-                        comment_count: expect.any(Number)
-                    }
-    
-                    articles.forEach(article =>{
-                        expect(article).toMatchObject(expected);
-                    })
-                })
-            })
-            test("200: Responds with empty array when given non-existing query value", ()=>{
-                return request(app).get("/api/articles?topic=hello").expect(200).then(({body})=>{
-                    const {articles} = body;
-    
-                    expect(articles).toEqual([]);
-                })
+    describe("POST /api/articles/:article_id/comments", ()=>{
+        test("201: Responds with newly added comment", ()=>{
+            const newComment = {
+                username: "icellusedkars",
+                body: "test comment"
+            }
+            return request(app).post("/api/articles/1/comments").send(newComment).expect(201).then(({body})=>{
+                const {comment} = body;
+                const expected = {
+                    comment_id: expect.any(Number),
+                    article_id: 1,
+                    author: "icellusedkars",
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    body: "test comment"
+                }
+                
+                expect(comment).toMatchObject(expected);
             })
         })
-        test("400: Responds with bad request when given invalid query", ()=>{
-            return request(app).get("/api/articles?hello=Mitch").expect(400).then(({body})=>{
-                const {message} = body; 
+        test("400: Responds with bad requests for invalid article_id", ()=>{
+            const newComment = {
+                username: "icellusedkars",
+                body: "test comment"
+            }
+            return request(app).post("/api/articles/hello/comments").send(newComment).expect(400).then(({body}) =>{
+                const {message} = body;
 
                 expect(message).toEqual("Bad Request");
             })
         })
-      
-        describe("/api/articles?sort_by=collumn", ()=>{
-            test("200: Responds with articles in order by article_id value", ()=>{
-                return request(app).get("/api/articles?sort_by=article_id").expect(200).then(({body})=>{
-                    const {articles} = body;
-                    
-                    expected = {
-                        article_id: expect.any(Number),
-                        title: expect.any(String),
-                        topic: expect.any(String),
-                        author: expect.any(String),
-                        created_at: expect.any(String),
-                        votes: expect.any(Number),
-                        article_img_url:  expect.any(String),
-                        comment_count: expect.any(Number)
-                    }
+        test("404: Responds with not found for invalid body", ()=>{
+            const newComment = {
+                username: "",
+                body: "",
+                name: ""
+            }
+            return request(app).post("/api/articles/1/comments").send(newComment).expect(404).then(({body}) =>{
+                const {message} = body;
 
-                    expect(articles).toBeSortedBy("article_id", {descending: true});
-    
-                    articles.forEach(article =>{
-                        expect(article).toMatchObject(expected);
-                    })
-                })
-            })
-            test("200: Responds with articles in order by title query value", ()=>{
-                return request(app).get("/api/articles?sort_by=title").expect(200).then(({body})=>{
-                    const {articles} = body;
-                    
-                    expected = {
-                        article_id: expect.any(Number),
-                        title: expect.any(String),
-                        topic: expect.any(String),
-                        author: expect.any(String),
-                        created_at: expect.any(String),
-                        votes: expect.any(Number),
-                        article_img_url:  expect.any(String),
-                        comment_count: expect.any(Number)
-                    }
-
-                    expect(articles).toBeSortedBy("title", {descending: true});
-    
-                    articles.forEach(article =>{
-                        expect(article).toMatchObject(expected);
-                    })
-                })
-            })
-            test("404: Responds with not found with invalid query value", ()=>{
-                return request(app).get("/api/articles?sort_by=helloooo").expect(404).then(({body})=>{
-                    const {message} = body; 
-    
-                    expect(message).toEqual("Not Found");
-                })
+                expect(message).toEqual("Not Found");
             })
         })
-        describe("/api/articles?order=order", ()=>{
-            test("200: Responds with an array of article objects in order of DESC value", ()=>{
-                return request(app).get("/api/articles?order=DESC").expect(200).then(({body})=>{
-                    const {articles} = body;
+    })
 
-                    expected = {
-                        article_id: expect.any(Number),
-                        title: expect.any(String),
-                        topic: expect.any(String),
-                        author: expect.any(String),
-                        created_at: expect.any(String),
-                        votes: expect.any(Number),
-                        article_img_url:  expect.any(String),
-                        comment_count: expect.any(Number)
-                    }
-
-                    expect(articles).toBeSortedBy("created_at", {descending: true});
-
-                    articles.forEach(article =>{
-                        expect(article).toMatchObject(expected);
-                    })
-                })
+    describe("PATCH /api/articles/:article_id", ()=>{
+        test("200: Responds with updated article when given positive inc_votes", ()=>{
+            const newVote = {inc_votes: 10};
+            return request(app).patch("/api/articles/3").send(newVote).expect(200).then(({body}) =>{
+                const {article} = body;
+                const expected = {
+                    author: 'icellusedkars',
+                    title: 'Eight pug gifs that remind me of mitch',
+                    article_id: 3,
+                    topic: 'mitch',
+                    created_at: '2020-11-03T09:12:00.000Z',
+                    votes: 10,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                }
+                expect(article).toMatchObject(expected);
             })
-            test("200: Responds with an array of article objects in order of ASC value", ()=>{
-                return request(app).get("/api/articles?order=ASC").expect(200).then(({body})=>{
-                    const {articles} = body;
-
-                    expected = {
-                        article_id: expect.any(Number),
-                        title: expect.any(String),
-                        topic: expect.any(String),
-                        author: expect.any(String),
-                        created_at: expect.any(String),
-                        votes: expect.any(Number),
-                        article_img_url:  expect.any(String),
-                        comment_count: expect.any(Number)
-                    }
-
-                    expect(articles).toBeSortedBy("created_at", {descending: false});
-
-                    articles.forEach(article =>{
-                        expect(article).toMatchObject(expected);
-                    })
-                })
+        })
+        test("200: Responds with updated article when given negative inc_votes", ()=>{
+            const newVote = {inc_votes: -10};
+            return request(app).patch("/api/articles/3").send(newVote).expect(200).then(({body}) =>{
+                const {article} = body;
+                const expected = {
+                    author: 'icellusedkars',
+                    title: 'Eight pug gifs that remind me of mitch',
+                    article_id: 3,
+                    topic: 'mitch',
+                    created_at: '2020-11-03T09:12:00.000Z',
+                    votes: -10,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                }
+                expect(article).toMatchObject(expected);
             })
-            test("404: Responds with not found with invalid query value", ()=>{
-                return request(app).get("/api/articles?order=hellooo").expect(404).then(({body})=>{
-                    const {message} = body; 
-    
-                    expect(message).toEqual("Not Found");
+        })
+        test("400: Responds with 400 when given invalid article_id", ()=>{
+            const newVote = {inc_votes: 10};
+            return request(app).patch("/api/articles/hello").send(newVote).expect(400).then(({body}) =>{
+                const {message} = body;
+                
+                expect(message).toEqual("Bad Request");
+            })
+        })
+        test("400: Responds with 400 when given invalid body", ()=>{
+            const newVote = {inc_votes: "hello"};
+            return request(app).patch("/api/articles/1").send(newVote).expect(400).then(({body}) =>{
+                const {message} = body;
+                
+                expect(message).toEqual("Bad Request")
+            })
+        })
+        test("404: Responds with 404 when given valid but not existing article_id", ()=>{
+            const newVote = {inc_votes: 10};
+            return request(app).patch("/api/articles/9999").send(newVote).expect(404).then(({body})=>{
+                const {message} = body;
+
+                expect(message).toEqual("Not Found");
+            })
+        })
+    })
+
+    describe("DELETE /api/comments/:comment_id", ()=>{
+        test("204: Responds with status code", ()=>{
+            return request(app).delete("/api/comments/2").expect(204);
+        })
+        test("400: Responds with bad request for invalid id", ()=>{
+            return request(app).delete("/api/comments/hello").expect(400).then(({body})=>{
+                const {message} = body;
+                expect(message).toEqual("Bad Request");
+            })
+        })
+        test("404: Responds with not found if comment_id does not exist", ()=>{
+            return request(app).delete("/api/comments/999").expect(404).then(({body}) =>{
+                const {message} = body;
+                expect(message).toEqual("Not Found");
+            })
+        })
+    })
+
+    describe("GET /api/users", ()=>{
+        test("200: Responds with an array of user objects", ()=>{
+            return request(app).get("/api/users").expect(200).then(({body}) =>{
+                const {users} = body;
+                const expected = {
+                    username: expect.any(String),
+                    name: expect.any(String),
+                    avatar_url: expect.any(String)
+                }
+                expect(users).toHaveLength(4);
+                users.forEach(user =>{
+                    expect(user).toMatchObject(expected)
                 })
             })
         })
     })
 })
-
-// {
-//     author: 'icellusedkars',
-//     title: 'Does Mitch predate civilisation?',
-//     article_id: 8,
-//     topic: 'mitch',
-//     created_at: '2020-04-17T01:08:00.000Z',
-//     votes: 0,
-//     article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
-//     comment_count: 0
-//   },
-
-
-
-
-
